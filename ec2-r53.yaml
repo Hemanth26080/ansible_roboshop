@@ -2,7 +2,7 @@
   hosts: local
   connection: local
   vars:
-    ami_id: ami-026992d753d5622bc
+    ami_id: ami-0220d79f3f480ecf5
     sg_id: sg-093dd9ce6f294bb69 # replace with your SG ID
     zone_id: "Z09571432H0XSZWLPQGY5" # replace with your ID
     domain_name: "phemanth.in"
