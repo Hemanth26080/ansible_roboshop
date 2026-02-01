@@ -3,10 +3,28 @@
   become: yes
 
   tasks:
-    - name: install redis
+    - name: disable the redis version
+      ansible.builtin.command: dnf module disable redis -y
+    
+    - name: enable the redis:7
+      ansible.builtin.command: dnf module enable redis:7 -y
+
+    - name: install redis with enabled version
       ansible.builtin.package:
         name: redis
         state: present
+
+    - name: allow remote connections to redis
+      ansible.builtin.replace:
+        path: /etc/redis/redis.conf
+        regexp: 'bind 127.0.0.1'
+        replace: 'bind 0.0.0.0'
+
+    - name: protection mode ON
+      ansible.builtin.replace:
+        path: /etc/redis/redis.conf
+        regexp: 'protected-mode yes'
+        replace: 'protected-mode no'
 
     - name: start and enable redis
       ansible.builtin.service:
