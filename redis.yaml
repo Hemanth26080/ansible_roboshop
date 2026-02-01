@@ -1,0 +1,15 @@
+- name: setup redis server
+  hosts: redis
+  become: yes
+
+  tasks:
+    - name: install redis
+      ansible.builtin.package:
+        name: redis
+        state: present
+
+    - name: start and enable redis
+      ansible.builtin.service:
+        name: redis
+        state: started
+        enabled: yes
