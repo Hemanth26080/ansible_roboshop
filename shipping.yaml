@@ -1,14 +1,13 @@
-- name: setup shipping server
+- name: configure shipping server
   hosts: shipping
-  become: true
+  become: yes
   tasks:
-
-  - name: install maven and mysql
-    ansible.builtin.package:
+  - name: install maven
+    ansible.builtin.dnf:
       name: "{{ item }}"
       state: present
     loop:
-    - maven 
+    - maven
     - mysql
 
   - name: install mysql python libraries
@@ -19,10 +18,10 @@
     - cryptography
     - PyMySQL
 
-  - name: create roboshop user
+  - name: create roboshop system user
     ansible.builtin.user:
       name: roboshop
-      comment: RoboShop System shipping
+      comment: RoboShop System user
       system: true
       shell: /sbin/nologin
       home: /app
@@ -44,7 +43,7 @@
 
   - name: download shipping application
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/shipping.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
       dest: /tmp/shipping.zip
 
   - name: extract shipping application
@@ -58,7 +57,7 @@
     args:
       chdir: /app
 
-  - name: building shipping jar
+  - name: move jar file
     ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
     args:
       chdir: /app
@@ -68,7 +67,7 @@
       src: shipping.service
       dest: /etc/systemd/system/shipping.service
 
-  - name: import shipping data into sql
+  - name: import shipping data into mysql
     community.mysql.mysql_db:
       state: import
       name: all
@@ -87,3 +86,5 @@
       enabled: true
       state: started
       daemon_reload: true
+
+  
