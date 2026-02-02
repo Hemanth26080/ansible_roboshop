@@ -7,7 +7,11 @@ User=roboshop
 Environment=CART_ENDPOINT=cart.phemanth.in:8080
 Environment=DB_HOST=mysql.phemanth.in 
 // highlight-end
-ExecStart=/bin/java -jar /app/shipping.jar
+//ExecStart=/bin/java -jar /app/shipping.jar
+
+ExecStart=/usr/bin/java -jar /app/shipping.jar \
+--spring.datasource.url="jdbc:mysql://mysql.phemanth.in:3306/shipping?allowPublicKeyRetrieval=true&useSSL=false"
+
 SyslogIdentifier=shipping
 
 [Install]
